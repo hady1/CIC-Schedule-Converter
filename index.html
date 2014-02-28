@@ -7,20 +7,65 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-
-    <title>Cic-schedule-converter by hady1</title>
+    <link rel="stylesheet" type="text/css" href="stylesheets/jquery.timepicker.css" media="screen" />
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="javascripts/jquery.timepicker.min.js"></script>
+    <title>Cic schedule converter</title>
+            <script>
+            $(function(){
+                var arr = [
+                    {val : 0, text: 'Please Select'},
+                    {val : 1, text: '1'},
+                    {val : 2, text: '2'},
+                    {val : 3, text: '3'},
+                    {val : 4, text: '4'},
+                    {val : 5, text: '5'},
+                    {val : 6, text: '6'},
+                    {val : 7, text: '7'}
+                ];
+                
+                var sel = $('<select id="course">');
+                $(sel).insertBefore("#tableCreate");
+                $(arr).each(function() {
+                    sel.append($("<option>").attr('value',this.val).text(this.text));
+                });
+                $("#course").change(function() {
+                    var row_number = new Number($("#course option:selected").val());
+                    $("#tableCreate tr:gt(0)").remove();
+                    for (i = 1; i <= row_number; i++) {
+                        var row = $('<tr id="row'+i+'"><td><input type="checkbox"/></td><td><input type="text" /></td><td><input class="hour" min=0 max=5 value="1" type="number" /></td><td><input size="4" type="text" /></td><td><input size="5" type="text" /></td><td><input size="4" type="text" class="time" /></td><td><select class="day" size="1"><option value="base" selected>Please Select day</option><option value="saturday">S</option><option value="sunday">U</option><option value="monday">M</option><option value="tuesday">T</option><option value="wednesday">W</option><option value="thursday">R</option></select></td><td><input /></td></tr>');
+                        $('#tableCreate').append(row);
+                        $('.time').timepicker({'step': 60,'minTime': '9:00am','maxTime': '4:00pm'});
+                    }
+                });
+                $("#day").change(function() {
+                }); 
+                $("#print").click(function(){
+                    var row_number = new Number($("#course option:selected").val());
+                    for (i = 1; i <= row_number; i++){
+                        var day = $( '#row'+i+' .day option:selected').val();
+                        var start = parseInt($('#row'+i+' .time').val(), 10)
+                        var hour = new Number($('#row'+i+' .hour').val());
+                        for (z = 0; z < hour;z++){
+                            var sum = start + z;
+                            if(sum > 12){sum = sum - 12;}
+                            $("."+day+" ."+sum).html("working");
+                        }
+                    }
+                });
+              });
+        </script>
   </head>
 
   <body>
 
     <header>
       <div class="container">
-        <h1>Cic-schedule-converter</h1>
-        <h2>this is a tool that converts the new cic schedual to the old schedual form</h2>
+        <h1>CIC Schedule Converter</h1>
+        <h2>this is a tool that converts the new cic schedual to the old schedual form.
+        this tool is far from complete and it is not working . it just let you see how it will work.</h2>
 
         <section id="downloads">
-          <a href="https://github.com/hady1/CIC-Schedule-Converter/zipball/master" class="btn">Download as .zip</a>
-          <a href="https://github.com/hady1/CIC-Schedule-Converter/tarball/master" class="btn">Download as .tar.gz</a>
           <a href="https://github.com/hady1/CIC-Schedule-Converter" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
         </section>
       </div>
@@ -28,7 +73,104 @@
 
     <div class="container">
       <section id="main_content">
-        <p>test</p>
+                <div id="mainContainer">
+            <form>
+                <table border="1" id="tableCreate">
+                    <tr>
+                        <th>tut</th>
+                        <th>Title</th>
+                        <th>Hours</th>
+                        <th>Building</th>
+                        <th>Room</th>
+                        <th>Start</th>
+                        <th>Day</th>
+                        <th>Type</th>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div id="secondContainer">
+            <table border="1">
+    <tr>
+        <th>Day/Lecture</th>
+        <th scope="col">9:00 - 10:00</th>
+        <th scope="col">10:00 - 11:00</th>
+        <th scope="col">11:00 - 12:00</th>
+        <th scope="col">12:00 - 1:00</th>
+        <th scope="col">1:00 - 2:00</th>
+        <th scope="col">2:00 - 3:00</th>
+        <th scope="col">3:00 - 4:00</th>
+        <th scope="col">4:00 - 5:00</th>
+    </tr>
+    <tr class="saturday">
+        <th scope="row">Saturday</th>
+        <td class="9">0.0</td>
+        <td class="10">0.1</td>
+        <td class="11">0.2</td>
+        <td class="12">0.3</td>
+        <td class="1">0.4</td>
+        <td class="2">0.5</td>
+        <td class="3">0.6</td>
+        <td class="4">0.7</td>
+    </tr>
+    <tr class="sunday">
+        <th scope="row">Sunday</th>
+        <td class="9">1.0</td>
+        <td class="10">1.1</td>
+        <td class="11">1.2</td>
+        <td class="12">1.3</td>
+        <td class="1">1.4</td>
+        <td class="2">1.5</td>
+        <td class="3">1.6</td>
+        <td class="4">1.7</td>
+    </tr>
+    <tr class="monday">
+        <th scope="row">Monday</th>
+        <td class="9">2.0</td>
+        <td class="10">2.1</td>
+        <td class="11">2.2</td>
+        <td class="12">2.3</td>
+        <td class="1">2.4</td>
+        <td class="2">2.5</td>
+        <td class="3">2.6</td>
+        <td class="4">2.7</td>
+    </tr>
+    <tr class="tuesday">
+        <th scope="row">Tuesday</th>
+        <td class="9">3.0</td>
+        <td class="10">3.1</td>
+        <td class="11">3.2</td>
+        <td class="12">3.3</td>
+        <td class="1">3.4</td>
+        <td class="2">3.5</td>
+        <td class="3">3.6</td>
+        <td class="4">3.7</td>
+    </tr>
+    <tr class="wednesday">
+        <th scope="row">Wednesday</th>
+        <td class="9">4.0</td>
+        <td class="10">4.1</td>
+        <td class="11">4.2</td>
+        <td class="12">4.3</td>
+        <td class="1">4.4</td>
+        <td class="2">4.5</td>
+        <td class="3">4.6</td>
+        <td class="4">4.7</td>
+    </tr>
+    <tr class="thursday">
+        <th scope="row">Thursday</th>
+        <td class="9">5.0</td>
+        <td class="10">5.1</td>
+        <td class="11">5.2</td>
+        <td class="12">5.3</td>
+        <td class="1">5.4</td>
+        <td class="2">5.5</td>
+        <td class="3">5.6</td>
+        <td class="4">5.7</td>
+    </tr>
+</table>
+        </div>
+        <button id="print">Print</button>
       </section>
     </div>
 
